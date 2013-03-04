@@ -3,7 +3,7 @@ var stylus = require('stylus');
 var file_helper = require('./helpers/file.js');
 var Nohm = require('nohm').Nohm;
 var i18n = require(__dirname+'/helpers/i18n.js');
-var uglify = require('uglify-js2');
+var uglify = require('uglify-js');
 var fs = require('fs');
 
 
