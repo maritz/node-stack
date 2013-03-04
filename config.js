@@ -1,5 +1,14 @@
 var env = process.env.NODE_ENV || 'development';
 
+try {
+  var redis = JSON.parse(process.env.VCAP_SERVICES)["redis-2.2"][0].credentials;
+} catch(e) {
+  var redis = {
+    host: "127.0.0.1",
+    port: 6379,
+  };
+}
+
 var defaults = {
   "static": {
     port: 3003
@@ -28,15 +37,17 @@ var defaults = {
     }
   },
   "nohm": {
-    url: 'localhost',
-    port: 6379,
-    db: 5,
-    prefix: 'game'
+    url: redis.host,
+    port: redis.port,
+    db: 7,
+    prefix: 'node_stack',
+    pw: redis.password
   },
   "redis": {
-    url: 'localhost',
-    port: 6379,
-    db: 4
+    url: redis.host,
+    port: redis.port,
+    db: 4,
+    pw: redis.password
   },
   "sessions": {
     secret: require('fs').readFileSync(__dirname+"/session.key"),
