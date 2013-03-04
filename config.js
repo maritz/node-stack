@@ -39,7 +39,7 @@ var defaults = {
     db: 4
   },
   "sessions": {
-    secret: "super secret cat",
+    secret: require('fs').readFileSync(__dirname+"/session.key"),
     db: 1
   }
 };
