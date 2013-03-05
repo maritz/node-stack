@@ -81,16 +81,14 @@ var App = Backbone.Router.extend({
     }
     
     try {
-      this.view(module, action, null, parameters, function (view) {
-        self.current = {
-          module: module,
-          action: action,
-          view: view,
-          route: orig_route
-        };
-        self.navigation();
-        self.breadcrumb(parameters);
-      });
+      self.current = {
+        module: module,
+        action: action,
+        route: orig_route,
+        view: this.view(module, action, null, parameters)
+      };
+      self.navigation();
+      self.breadcrumb(parameters);
     } catch(e) {
       this.current = previous;
       if (e !== 'view_stop') {
