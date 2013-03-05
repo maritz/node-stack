@@ -102,16 +102,15 @@ var App = Backbone.Router.extend({
     }
   },
   
-  view: function(module, action, $el, params, callback) {
-    if (typeof (callback) !== 'function') {
-      callback = $.noop;
-    }
+  view: function(module, action, $el, params) {
+    var self = this;
     var view;
+    
     var after_render = function () {
-      if ($el.hasClass('main_content') && $el[0].parentNode) {
+      var is_view_current = !self.current.view || self.current.view.cid === view.cid;
+      if (is_view_current && $el.hasClass('main_content') && $el[0].parentNode) {
         $el.siblings().remove();
       }
-      callback(view);
     };
     
     if (!$el) {
