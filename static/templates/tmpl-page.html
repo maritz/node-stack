@@ -1,3 +1,8 @@
+
+<script type="text/x-jade-tmpl" name="preload_dummy">
+// don't remove this. // TODO: remove this properly by using require.js to handle depenencies
+</script>
+
 <script type="text/x-jade-tmpl" name="breadcrumb">
 ul.breadcrumb
   li
@@ -26,6 +31,17 @@ ul.sub_navigation
   if (locals.footer)
     .modal-footer
       !=footer
+</script>
+
+<script type="text/x-jade-tmpl" name="view_loading_overlay">
+.view_loading_overlay
+  .backdrop
+  span= _t('loading')
+  .loading_balls_container
+    .ball_1
+    .ball_2
+    .ball_3
+    .ball_4
 </script>
 
 <script type="text/x-jade-tmpl" name="pagination">

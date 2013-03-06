@@ -19,7 +19,8 @@ module.exports = {
     pagination: {
       previous: '<<',
       next: '>>'
-    }
+    },
+    loading: "Loading..."
   },
   overlays: {
     login_needed: "Login",

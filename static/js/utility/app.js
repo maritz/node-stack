@@ -1,5 +1,7 @@
 
-_r('form_templates'); // see app.initiaize
+ // preload form and page templates
+_r('form_templates');
+_r('page_templates');
 
 var App = Backbone.Router.extend({
   
@@ -22,7 +24,8 @@ var App = Backbone.Router.extend({
       default_action: 'index',
       $content: $('#content'),
       $breadcrumb: $('#breadcrumb'),
-      $navigation: $('#navigation')
+      $navigation: $('#navigation'),
+      $loading_overlay: $('#view_loading_overlay')
     };
     _.extend(this.config, spec);
 
@@ -31,6 +34,11 @@ var App = Backbone.Router.extend({
     this.template('form', 'input', {}, function () {
       // make sure we have the form templates loaded so we can safely call them from other templates
       _r('form_templates', true);
+    });
+    
+    this.template('page', 'preload_dummy', {}, function () {
+      // make sure we have the page templates loaded so we can safely call them from app.view()
+      _r('page_templates', true);
     });
     
     this.bind('login', function () {
@@ -121,6 +129,15 @@ var App = Backbone.Router.extend({
     $el.data('module', module);
     $el.data('action', action);
     
+    var loading_overlay = this.template('page', 'view_loading_overlay', {
+      _t: function (name) {
+        return $.t(name);
+      }
+    });
+    
+    
+    $el.siblings('.view_loading_overlay').remove();
+    $el.after(loading_overlay);
     if ( ! this.views.hasOwnProperty(module) || ! this.views[module].hasOwnProperty(action) ) {
       // try to just load a template without a proper view
       console.log('No view found, trying to render default view. ('+module+':'+action+')');
