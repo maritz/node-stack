@@ -115,6 +115,8 @@ var App = Backbone.Router.extend({
     var view;
     
     var after_render = function () {
+      view.unbind(null, after_render);
+      
       var is_view_current = !self.current.view || self.current.view.cid === view.cid;
       if (is_view_current && $el.hasClass('main_content') && $el[0].parentNode) {
         $el.siblings().remove();
