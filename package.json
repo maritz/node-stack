@@ -18,7 +18,7 @@
     "connect-redis": "1.2",
     "uglify-js": "2"
   },
-  "dev-dependencies": {
+  "devDependencies": {
     "soda": "0.2.5",
     "nodeunit": "0.6",
     "request": "2.9"

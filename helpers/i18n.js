@@ -1,10 +1,10 @@
 var fs = require('fs');
 
-var basedir = __dirname + '/../static/i18n/'
+var basedir = __dirname + '/../i18n/'
 , translations = {}
 , current_hash = {};
 
-crypto = require('crypto');
+var crypto = require('crypto');
 
 var checkHashChange = function checkHashChange (lang) {
   var new_hash = crypto.createHash('md5');
@@ -12,10 +12,11 @@ var checkHashChange = function checkHashChange (lang) {
   new_hash = new_hash.digest('base64');
   current_hash[lang] = new_hash.substr(0, 10);
   // TODO: maybe we need an event here to make others aware that the translation was changed?!
-}
+};
 
 var loadTranslations = function (lang, file) {
   try {
+    console.log('loading translation files', lang);
     delete require.cache[require.resolve(basedir + lang + '/' + file)];
     var name = file.substring(0, file.lastIndexOf('.js'));
     translations[lang][name] = require(basedir + lang + '/' + file);
@@ -23,14 +24,14 @@ var loadTranslations = function (lang, file) {
   } catch (e) {
     console.dir(e.stack);
   }
-}
+};
 
 try {
   var langs = fs.readdirSync(basedir);
   if (Array.isArray(langs)) {
     langs.forEach(function (lang) {
       translations[lang] = {};
-      files = fs.readdirSync(basedir + lang);
+      var files = fs.readdirSync(basedir + lang);
       if (Array.isArray(files)) {
         files.forEach(function (file) {
           if (file.lastIndexOf('.js') === file.length - 3) {
@@ -54,13 +55,12 @@ module.exports = {
     return current_hash; 
   },
   getTranslations: function (lang) { 
-    return translations.hasOwnProperty(lang) ? translations[lang] : {} 
+    return translations.hasOwnProperty(lang) ? translations[lang] : {};
   },
   langs: Object.keys(translations),
   getTranslation: function (lang, key) {
     var reg = /([^:]*):/g
-    , module = reg.exec(key)
-    , indextest = reg.lastIndex,
+    , module = reg.exec(key),
     keystart = 0,
     orig = key;
     var section = reg.exec(key);
@@ -86,7 +86,7 @@ module.exports = {
                           : translations[lang][module];
       if (typeof(base[key]) === 'undefined') {
         // translation not found, try to find the key in en_US
-        var base = section ? 
+        base = section ? 
                             translations['en_US'][module][section]
                           : translations['en_US'][module];
         if (typeof(base[key]) !== 'undefined') {

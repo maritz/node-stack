@@ -17,10 +17,10 @@ connector.connect(function () {
     
     var server = express.createServer();
     
+    server.use('/REST', require(__dirname+'/rest_server.js'));
+    
     require('./static_file_server.js').init(server);
     
-    
-    server.use('/REST', require(__dirname+'/rest_server.js'));
     
     server.listen(config['static'].port || 3000);
     
