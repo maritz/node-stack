@@ -237,7 +237,7 @@ module.exports = function(grunt) {
           paths: ['node_modules/grunt-contrib-stylus/node_modules']
         },
         files: {
-          '<%= yeoman.app %>styles/style.css': ['<%= yeoman.app %>/styles/style.styl']
+          '<%= yeoman.app %>/styles/style.css': ['<%= yeoman.app %>/styles/style.styl']
         }
       }
     },
