@@ -11,6 +11,11 @@ exports.connect = function (cb) {
     console.log('nohm redis error: ', arguments);
   });
   
+  var nohm_redis_pubsub_client = redis.createClient(config.nohm.port, config.nohm.host, { no_ready_check: true });
+  nohm_redis_pubsub_client.on('error', function () {
+    console.log('nohm redis pubsub error: ', arguments);
+  });
+  
   registry.redis_sessions = redis.createClient(config.redis.port, config.redis.host, { no_ready_check: true });
   registry.redis_sessions.on('error', function () {
     console.log('redis_sessions error: ', arguments);
@@ -54,7 +59,8 @@ exports.connect = function (cb) {
     authAndSelect(registry.redis, config.redis.db, config.redis.pw),
     authAndSelect(registry.redis_pub, config.redis.db, config.redis.pw),
     authAndSelect(registry.redis_sub, config.redis.db, config.redis.pw),
-    authAndSelect(nohm_redis_client, config.nohm.db, config.nohm.pw)
+    authAndSelect(nohm_redis_client, config.nohm.db, config.nohm.pw),
+    authAndSelect(nohm_redis_pubsub_client, config.nohm.db, config.nohm.pw)
     ],
     function (err) {
       if (err) {
@@ -63,6 +69,12 @@ exports.connect = function (cb) {
       
       nohm.setClient(nohm_redis_client);
       nohm.setPrefix(config.nohm.prefix);
+      
+      nohm.setPubSubClient(nohm_redis_pubsub_client, function (err) {
+        if (err) {
+          console.log('Error while initializing the nohm pubsub redis client');
+        }
+      });
       
       cb();
     }
