@@ -73,6 +73,7 @@ define(["underscore", "libs/backbone/view", "models/userModel", "collections/use
     model: userModels.User,
     max_age: 0,
     requires_login: true,
+    wait_for_user_loaded: true,
     
     edit_is_self: false,
     

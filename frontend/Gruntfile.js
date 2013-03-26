@@ -38,14 +38,14 @@ module.exports = function(grunt) {
         tasks: ['livereload']
       },
       stylus: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.{styl}'],
+        files: ['<%= yeoman.app %>/styles/{,*/}*.styl'],
         tasks: ['stylus']
       },
       jade: {
         files: [
           '<%= yeoman.app %>/index.jade',
           '<%= yeoman.app %>/../../i18n/{,*/}*.js', // this updates the i18n hashes
-          '<%= yeoman.app %>/scripts/templates/*.jade'
+          '<%= yeoman.app %>/scripts/templates/*.html'
           ],
         tasks: ['jade']
       }

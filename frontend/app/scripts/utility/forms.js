@@ -33,6 +33,7 @@ define(["jquery", "underscore", "jquery.cookie"], function ($, _) {
       throw new Error('formHandler requires a model or the view to have a model');
     }
     this.autoLabels();
+    this.readonly = {};
     
     getCsrf();
   };
@@ -100,7 +101,7 @@ define(["jquery", "underscore", "jquery.cookie"], function ($, _) {
   formHandler.prototype.clearLoading = function (name) {
     var $el = this.getInputByName(name);
     $el.siblings('.loading').addClass('hidden');
-    if ( ! this._submitting) {
+    if ( ! this._submitting && ! this.readonly[name]) {
       $el.attr('readOnly', false);
     }
   };
@@ -142,13 +143,22 @@ define(["jquery", "underscore", "jquery.cookie"], function ($, _) {
     }, 200);
   };
   
+  formHandler.prototype.unblockInputs = function () {
+    var self = this;
+    this.getInputs().each(function () {
+      var $this = $(this);
+      var name = $this.attr("name");
+      if ( ! self.readonly[name]) {
+        $this.prop('readOnly', false);
+      }
+    });
+  };
+  
   formHandler.prototype.submit = function (e) {
     e.preventDefault();
     var self = this;
     
     this._submitting = true;
-    
-    this.getInputs().prop('readOnly', true);
     
     var attributes =  {};
     var submit_attributes = {
@@ -158,6 +168,7 @@ define(["jquery", "underscore", "jquery.cookie"], function ($, _) {
       var $item = $(this);
       var name = $item.attr('name');
       var value = $item.val();
+      $item.prop('readOnly', true);
       if ($item.data('validate')) {
         attributes[name] = value;
       }
@@ -221,8 +232,13 @@ define(["jquery", "underscore", "jquery.cookie"], function ($, _) {
     });
     
     this.getInputs().each(function () {
-      if ($(this).attr('required')) {
-        self.model.required.push($(this).attr('name'));
+      var $this = $(this);
+      var name = $(this).attr('name');
+      if ($this.attr('required')) {
+        self.model.required.push(name);
+      }
+      if ($this.attr('readonly')) {
+        self.readonly[name] = true;
       }
     });
     

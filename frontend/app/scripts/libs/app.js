@@ -112,6 +112,7 @@ define(
           var is_view_current = !self.current.view || self.current.view.cid === view.cid;
           if (is_view_current && $el.hasClass('main_content') && $el[0].parentNode) {
             $el.siblings().remove();
+            self.current.view = view;
           }
         };
         
@@ -173,6 +174,8 @@ define(
             }
           }
         }, viewUnavailable);
+        
+        return view;
       },
       
       go: function (str) {

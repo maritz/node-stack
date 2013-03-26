@@ -25,6 +25,7 @@
       name= locals.name,
       required= locals.required,
       value= locals.value,
+      readonly= locals.readonly || false,
       "data-link"= locals.link,
       "data-validate"= locals.validate,
       "data-no_form_class"= locals.no_form_class )
@@ -33,5 +34,45 @@
       span.error.input_error.help-inline
       
     if (locals.type !== 'submit' && locals.loading !== false)
+      .loading.help-inline.hidden!= $.t('forms.labels.checking')
+</script>
+
+<script type="text/x-jade-tmpl" name="textarea">
+- var id = 'textarea_'+(Math.floor(Math.random()*10))+(+new Date());
+
+.control-group
+    
+  if (locals.label !== false)
+    - var label_class = locals.required ? 'required' : false;
+    if (locals.label && locals["data-label"])
+      label.control-label(for= id, "data-label"= locals["data-label"], "class"= label_class)= label
+    else if (locals["data-label"])
+      label.control-label(for= id, "data-label"= locals["data-label"], "class"= label_class)!= $.t('forms.labels.'+locals.name)
+    else
+      label.control-label(for= id, "data-label"= locals.name, "class"= label_class)
+    
+  if (typeof(locals.link) === 'undefined')
+    - locals.link = true
+    
+  if (typeof(locals.validate) === 'undefined')
+    - locals.validate = true
+  
+  - var text = locals.value;
+  if (locals.escape !== false)
+    - text = _.escape(text);
+  
+  .controls
+    textarea( id= id
+      name= locals.name,
+      required= locals.required,
+      "data-link"= locals.link,
+      "data-validate"= locals.validate,
+      "data-no_form_class"= locals.no_form_class,
+      rows= locals.rows,
+      cols= locals.cols)
+      = text
+    
+    span.error.input_error.help-inline
+    if (locals.loading !== false)
       .loading.help-inline.hidden!= $.t('forms.labels.checking')
 </script>

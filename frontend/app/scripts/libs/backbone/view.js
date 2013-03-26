@@ -58,21 +58,29 @@ define(["backbone", "underscore", "utility/forms"], function (Backbone, _, forms
         this.init();
       }
       
-      if ( this.requires_login && ! window.app.user_self.get('name')) {
-        window.app.template('page', 'need_login_error', this.locals, function (html) {
-          self.$el.html(html);
-          self.trigger('rendered');
-        });
-        return false;
-      }
       
       if (this.auto_render) {
-        if (this.wait_for_user_loaded && ! window.app.user_self.loaded) {
-          window.app.once('user_loaded', function () {
+        
+        var check_login = function () {
+          if (self.requires_login && ! window.app.user_self.get('name')) {
+            window.app.template('page', 'need_login_error', self.locals, function (html) {
+              self.$el.html(html);
+              self.trigger('rendered');
+            });
+            return false;
+          } else {
             self.render();
+          }
+        };
+        
+        if ((this.requires_login || this.wait_for_user_loaded) && ! window.app.user_self.loaded) {
+          window.app.once('user_loaded', function () {
+            check_login();
           });
         } else {
-          this.render();
+          if (check_login() === false) {
+            return false;
+          }
         }
       }
       
