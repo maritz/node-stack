@@ -23,6 +23,7 @@ define(["underscore", "libs/backbone/view", "models/userModel", "collections/use
     wait_for_user_loaded: false,
     reload_on_login: true,
     
+    
     render: function () {
       var self = this;
       if (userModels.user_self.get('name')) {
@@ -199,7 +200,7 @@ define(["underscore", "libs/backbone/view", "models/userModel", "collections/use
    */
   exports.login = baseView.formView.extend({
     
-    model: userModels.user_self,
+    model: new userModels.Self(),
     
     auto_render: true,
     max_age: 0,
