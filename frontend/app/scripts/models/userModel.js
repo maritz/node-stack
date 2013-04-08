@@ -135,6 +135,7 @@ define(["nohmValidations", "libs/backbone/model", "utility/forms"], function (no
       return false;
     }
   });
+  exports.Self = Self;
   exports.user_self = new Self();
   
   return exports;
