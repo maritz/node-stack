@@ -1,4 +1,4 @@
-var app = require('express').createServer();
+var app = require('express')();
 var crypto = require('crypto');
 
 function createKey() {

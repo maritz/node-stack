@@ -11,5 +11,4 @@ process.on('exit', function () {
 process
   .on('SIGINT', process.exit)
   .on('SIGTERM', process.exit)
-  .on('SIGQUIT', process.exit)
-  .on('SIGKILL', process.exit);
+  .on('SIGQUIT', process.exit);

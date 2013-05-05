@@ -50,7 +50,7 @@ var defaults = {
     pw: redis.password
   },
   "sessions": {
-    secret: require('fs').readFileSync(__dirname+"/session.key"),
+    secret: require('fs').readFileSync(__dirname+"/session.key", "utf8"),
     db: 1
   }
 };

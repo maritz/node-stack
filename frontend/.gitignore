@@ -5,3 +5,4 @@ dist
 app/components
 app/scripts/templates/*.compiled.js
 app/index.html
+app/styles/style.css

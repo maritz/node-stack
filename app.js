@@ -3,6 +3,7 @@ var config = require(__dirname+'/config.js');
 var express = require('express');
 var registry = require(__dirname+'/registry.js');
 var file_helper = require('./helpers/file.js');
+var http = require('http');
 
 var connector = require('./helpers/redisConnector');
 
@@ -15,11 +16,12 @@ connector.connect(function () {
       registry.Models[name] = require('.'+val);
     });
     
-    var server = express.createServer();
+    var app = express();
+    var server = http.createServer(app);
     
-    server.use('/REST', require(__dirname+'/rest_server.js'));
+    app.use('/REST', require(__dirname+'/rest_server.js'));
     
-    require('./static_file_server.js').init(server);
+    require('./static_file_server.js').init(app);
     
     
     server.listen(config['static'].port || 3000);

@@ -263,6 +263,7 @@ module.exports = function(grunt) {
           client: true,
           multi_file: true,
           namespace: false,
+          amd: false,
           compileDebug: false,
           data: {
             client: false,

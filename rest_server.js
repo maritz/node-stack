@@ -1,33 +1,33 @@
 var file_helper = require('./helpers/file.js');
 var express = require('express');
-var server = express.createServer();
+var app = express();
 var nohm = require('nohm').Nohm;
 var registry = require(__dirname+'/registry.js');
 var RedisSessionStore = require('connect-redis')(express);
 
-module.exports = server;
+module.exports = app;
 
-if (server.set('env') === 'production' || server.set('env') === 'staging') {
-  server.use(express.logger({ immediate: true }));
+if (app.set('env') === 'production' || app.set('env') === 'staging') {
+  app.use(express.logger({ immediate: true }));
 } else {
-  server.use(express.logger({ format: 'dev' }));
-  server.use(express.responseTime());
+  app.use(express.logger({ format: 'dev' }));
+  app.use(express.responseTime());
 }
 
 
-server.use(express.bodyParser());
-server.use(express.methodOverride());
-server.use(express.cookieParser());
-server.use(express.session({
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(express.cookieParser());
+app.use(express.session({
   store: new RedisSessionStore({
     client: registry.redis_sessions
   }),
   secret: registry.config.sessions.secret
 }));
 
-server.use(express.csrf());
+app.use(express.csrf());
 
-server.use(function (req, res, next) {
+app.use(function (req, res, next) {
   res.ok = function (data) {
     data = data || {};
     res.json({result: 'success', data: data});
@@ -55,17 +55,17 @@ var controller_files = file_helper.getFiles(__dirname, '/controllers/');
 controller_files.forEach(function (val) {
   var name = val.match(/^\/controllers\/([\w]*)Controller.js$/)[1];
   
-  server.use('/'+name, require(__dirname+val));
+  app.use('/'+name, require(__dirname+val));
 });
 
-server.all('*', function (req, res, next) {
+app.all('*', function (req, res, next) {
   var notFoundError = new Error('Resource not available with given METHOD and URL.');
   console.log(req.method, req.url);
   notFoundError.code = 404;
   next(notFoundError);
 });
 
-server.use(function (err, req, res, next) {
+app.use(function (err, req, res, next) {
   if (err && err instanceof Error) {
     console.log('responding with error: '+err.name);
     console.dir(err.message);
@@ -80,8 +80,4 @@ server.use(function (err, req, res, next) {
     console.dir(err);
     next(err);
   }
-});
-
-server.mounted(function (parent){
-  console.log('mounted REST server');
 });
